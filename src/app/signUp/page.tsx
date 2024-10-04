@@ -1,14 +1,14 @@
 "use client";
-import React, { useState} from "react";
+import React, { useState } from "react";
 import { supabase } from "../lib/supabase";
-import { useRouter } from "next/navigation"; 
+import { useRouter } from "next/navigation";
 export default function Page() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const router = useRouter(); 
+  const router = useRouter();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -21,12 +21,32 @@ export default function Page() {
         setError(error.message);
         setSuccess("");
       } else {
-        setSuccess("Registration successful! Please check your email to verify.");
+        setSuccess(
+          "Registration successful! Please check your email to verify."
+        );
         setError("");
-        router.push("/login"); 
+        router.push("/login");
       }
     } catch (error) {
       setError("An error occurred during registration.");
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `http://localhost:3000/blog`,
+        },
+      });
+      if (error) {
+        setError("Google sign-in failed. Please try again.");
+      } else {
+        setSuccess("Please select an account");
+      }
+    } catch (error) {
+      setError("An error occurred during Google sign-in.");
     }
   };
 
@@ -35,12 +55,22 @@ export default function Page() {
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         <h2 className="text-2xl font-bold mb-6 text-center ">Register</h2>
 
-        {error && <div className="bg-red-100 text-red-700 p-2 mb-4 rounded">{error}</div>}
-        {success && <div className="bg-green-100 text-green-700 p-2 mb-4 rounded">{success}</div>}
+        {error && (
+          <div className="bg-red-100 text-red-700 p-2 mb-4 rounded">
+            {error}
+          </div>
+        )}
+        {success && (
+          <div className="bg-green-100 text-green-700 p-2 mb-4 rounded">
+            {success}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Name</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Name
+            </label>
             <input
               type="text"
               value={name}
@@ -51,7 +81,9 @@ export default function Page() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Email
+            </label>
             <input
               type="email"
               value={email}
@@ -62,7 +94,9 @@ export default function Page() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Password</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Password
+            </label>
             <input
               type="password"
               value={password}
@@ -79,6 +113,14 @@ export default function Page() {
             Register
           </button>
         </form>
+        <div className="text-center mt-6">
+          <button
+            onClick={handleGoogleSignIn}
+            className="w-full bg-red-500 text-white p-2 rounded hover:bg-red-600 transition"
+          >
+            Sign in with Google
+          </button>
+        </div>
       </div>
     </div>
   );

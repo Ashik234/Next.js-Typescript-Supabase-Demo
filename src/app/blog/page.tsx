@@ -3,9 +3,12 @@ import React, { useEffect } from "react";
 import AddBlogPage from "./addBlog/page";
 import { Post } from "../types/post";
 import { supabase } from "../lib/supabase";
+import { useRouter } from "next/navigation";
+
 function Page() {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [blogPosts, setBlogPosts] = React.useState<Post[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     const handleBlog = async () => {
@@ -27,10 +30,21 @@ function Page() {
     setBlogPosts((prevPosts) => [...prevPosts, newPost]);
   };
 
+  async function signOut() {
+    const { error } = await supabase.auth.signOut();
+    router.push("login");
+  }
+
   return (
     <div className="flex flex-col items-center p-6 bg-gray-100 min-h-screen">
       <header className="flex justify-between items-center w-full max-w-4xl mb-6">
         <h1 className="text-3xl font-bold text-gray-800">My Blog</h1>
+        <button
+          onClick={signOut}
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+        >
+          LogOut
+        </button>
         <button
           onClick={handleAddBlog}
           className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
