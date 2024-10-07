@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { supabase } from "../lib/supabase";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 export default function Page() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -116,11 +117,13 @@ export default function Page() {
         <div className="text-center mt-6">
           <button
             onClick={handleGoogleSignIn}
-            className="w-full bg-red-500 text-white p-2 rounded hover:bg-red-600 transition"
+            className="w-full border border-red-700  text-black p-2 rounded font-mono"
           >
             Sign in with Google
           </button>
         </div>
+        <h1 className="text-center mt-4">Already have an Account?<Link href="login"> <span className="text-blue-600">Login</span></Link></h1>
+
       </div>
     </div>
   );

@@ -4,7 +4,7 @@ import AddBlogPage from "./addBlog/page";
 import { Post } from "../types/post";
 import { supabase } from "../lib/supabase";
 import { useRouter } from "next/navigation";
-
+import { Rate } from "antd";
 function Page() {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [blogPosts, setBlogPosts] = React.useState<Post[]>([]);
@@ -28,6 +28,26 @@ function Page() {
 
   const addBlogPost = (newPost: Post) => {
     setBlogPosts((prevPosts) => [...prevPosts, newPost]);
+  };
+
+  // Function to update rating in Supabase
+  const handleRatingChange = async (value: number, postId: number) => {
+    const { error } = await supabase
+      .from("blog")
+      .update({ rating: value })
+      .eq("id", postId);
+
+    if (error) {
+      console.error("Error updating rating:", error.message);
+      return;
+    }
+
+    // Update the state with the new rating
+    setBlogPosts((prevPosts) =>
+      prevPosts.map((post) =>
+        post.id === postId ? { ...post, rating: value } : post
+      )
+    );
   };
 
   async function signOut() {
@@ -61,7 +81,15 @@ function Page() {
 
         {blogPosts.map((post, index) => (
           <div key={index} className="mb-4 mt-4 border-b pb-4">
-            <h3 className="text-5xl font-medium text-gray-700">{post.title}</h3>
+            <div className="flex justify-between">
+              <h3 className="text-5xl font-medium text-gray-700">
+                {post.title}
+              </h3>
+              <Rate
+                onChange={(value) => handleRatingChange(value, post.id)}
+                value={post.rating}
+              />
+            </div>
             {post.image && (
               <img
                 src={post.image}
