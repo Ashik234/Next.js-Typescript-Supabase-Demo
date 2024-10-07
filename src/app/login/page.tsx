@@ -16,18 +16,18 @@ export default function LoginPage() {
 
     try {
       // SignIn With Password
-      //   const { data, error } = await supabase.auth.signInWithPassword({
-      //     email,
-      //     password,
-      //   });
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
       // SignIn With Supabase Magic Link
-      const { error } = await supabase.auth.signInWithOtp({
-        email,
-        options: {
-          emailRedirectTo: "http://localhost:3000/blog",
-        },
-      });
+      // const { error } = await supabase.auth.signInWithOtp({
+      //   email,
+      //   options: {
+      //     emailRedirectTo: "http://localhost:3000/blog",
+      //   },
+      // });
 
       if (error) {
         setError("Invalid credentials. Please try again.");

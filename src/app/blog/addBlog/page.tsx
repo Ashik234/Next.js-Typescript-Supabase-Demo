@@ -4,11 +4,12 @@ import { supabase } from "../../lib/supabase";
 const AddBlogPage: React.FC<any> = ({ isOpen, onClose, addBlogPost }) => {
   const [title, setTitle] = React.useState("");
   const [description, setDescription] = React.useState("");
+  const [imageUrl, setImageUrl] = React.useState("");
 
   const handleAddBlog = async () => {
     const { data, error } = await supabase
       .from("blog")
-      .insert([{ title, description }])
+      .insert([{ title, description, image: imageUrl }])
       .select();
 
     if (error) {
@@ -21,7 +22,28 @@ const AddBlogPage: React.FC<any> = ({ isOpen, onClose, addBlogPost }) => {
     onClose();
     setTitle("");
     setDescription("");
+    setImageUrl("");
   };
+
+  async function uploadImage(e: any) {
+    let file = e.target.files[0];
+    const uniqueFileName = `${Date.now()}_${file.name}`;
+
+    const { data, error } = await supabase.storage
+      .from("Files")
+      .upload(uniqueFileName, file);
+
+    if (error) {
+      console.log("Error uploading image:", error.message);
+      return;
+    }
+
+    // Retrieve the public URL
+    const { data: publicData } = supabase.storage
+      .from("Files")
+      .getPublicUrl(uniqueFileName);
+    setImageUrl(publicData?.publicUrl || ""); // Store the public URL for the image
+  }
 
   if (!isOpen) return null;
 
@@ -44,16 +66,27 @@ const AddBlogPage: React.FC<any> = ({ isOpen, onClose, addBlogPost }) => {
         </div>
         <div className="mb-4">
           <label htmlFor="content" className="block text-sm font-medium mb-1">
-            Content
+            Description
           </label>
           <textarea
-            id="content"
+            id="description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             className="border border-gray-300 rounded-lg w-full p-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
             rows={4}
             placeholder="Enter blog content"
           ></textarea>
+        </div>
+        <div className="mb-4">
+          <label htmlFor="content" className="block text-sm font-medium mb-1">
+            Image
+          </label>
+          <input
+            type="file"
+            id="image"
+            onChange={(e) => uploadImage(e)}
+            className="border border-gray-300 rounded-lg w-full p-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
+          />
         </div>
         <div className="flex justify-end">
           <button

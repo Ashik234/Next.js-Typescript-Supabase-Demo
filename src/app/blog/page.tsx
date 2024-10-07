@@ -61,6 +61,13 @@ function Page() {
         {blogPosts.map((post, index) => (
           <div key={index} className="mb-4 border-b pb-4">
             <h3 className="text-4xl font-medium text-gray-700">{post.title}</h3>
+            {post.image && (
+              <img
+                src={post.image}
+                alt="Blog Image"
+                className="w-full h-auto mt-4"
+              />
+            )}
             <p className="text-gray-900">{post.description}</p>
             <p className="text-sm text-black font-semibold">
               {new Date(post.created_at).toLocaleString()}
