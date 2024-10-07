@@ -40,27 +40,28 @@ function Page() {
       <header className="flex justify-between items-center w-full max-w-4xl mb-6">
         <h1 className="text-3xl font-bold text-gray-800">My Blog</h1>
         <button
-          onClick={signOut}
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-        >
-          LogOut
-        </button>
-        <button
           onClick={handleAddBlog}
           className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
         >
           + Add Blog
         </button>
+        <button
+          onClick={signOut}
+          className="px-4 py-2 text-black  border-red-700 border rounded"
+        >
+          LogOut
+        </button>
       </header>
 
       <section className="w-full max-w-4xl bg-white shadow-md rounded-lg p-6">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+        <h2 className="text-3xl font-semibold text-gray-800 mb-4">
           Latest Posts
         </h2>
+        <hr />
 
         {blogPosts.map((post, index) => (
-          <div key={index} className="mb-4 border-b pb-4">
-            <h3 className="text-4xl font-medium text-gray-700">{post.title}</h3>
+          <div key={index} className="mb-4 mt-4 border-b pb-4">
+            <h3 className="text-5xl font-medium text-gray-700">{post.title}</h3>
             {post.image && (
               <img
                 src={post.image}
@@ -68,10 +69,12 @@ function Page() {
                 className="w-full h-auto mt-4"
               />
             )}
-            <p className="text-gray-900">{post.description}</p>
-            <p className="text-sm text-black font-semibold">
-              {new Date(post.created_at).toLocaleString()}
-            </p>
+            <div className="flex justify-between mt-8">
+              <p className="text-gray-900 text-xl">{post.description}</p>
+              <p className="text-sm text-black font-semibold">
+                {new Date(post.created_at).toLocaleString()}
+              </p>
+            </div>
           </div>
         ))}
       </section>

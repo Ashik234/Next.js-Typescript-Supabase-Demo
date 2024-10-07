@@ -74,7 +74,7 @@ const AddBlogPage: React.FC<any> = ({ isOpen, onClose, addBlogPost }) => {
             onChange={(e) => setDescription(e.target.value)}
             className="border border-gray-300 rounded-lg w-full p-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
             rows={4}
-            placeholder="Enter blog content"
+            placeholder="Enter blog description"
           ></textarea>
         </div>
         <div className="mb-4">
