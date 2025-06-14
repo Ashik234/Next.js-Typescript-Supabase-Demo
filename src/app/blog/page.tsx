@@ -5,6 +5,7 @@ import { Post } from "../types/post";
 import { supabase } from "../lib/supabase";
 import { useRouter } from "next/navigation";
 import { Rate } from "antd";
+import { Button } from "@/components/ui/button";
 function Page() {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [blogPosts, setBlogPosts] = React.useState<Post[]>([]);
@@ -77,6 +78,7 @@ function Page() {
         <h2 className="text-3xl font-semibold text-gray-800 mb-4">
           Latest Posts
         </h2>
+        <Button>SHADCN</Button>
         <hr />
 
         {blogPosts.map((post, index) => (
